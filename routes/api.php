@@ -20,14 +20,18 @@ Route::prefix('v1')->group(function() {
     Route::prefix('auth')->group(function() {
         Route::post('/signin', 'App\Http\Controllers\API\AuthController@signin')->name('signin');
         Route::post('/signup', 'App\Http\Controllers\API\AuthController@signup')->name('signup');
+    });
+    Route::group(['middleware' => ['auth:api'], 'prefix' => 'user'], function() {
         Route::get('/signout', 'App\Http\Controllers\API\AuthController@signout')->name('signout');
     });
 
     Route::group(['middleware' => ['auth:api'], 'prefix' => 'book'], function() {
-        Route::get('/', 'App\Http\Controllers\API\BookController@index')->name('ShowAllBooks');
-        Route::post('/add', 'App\Http\Controllers\API\BookController@store')->name('AddNewBooks');
-        Route::get('/show/{id}', 'App\Http\Controllers\API\BookController@show')->name('ShowBooksByID');
-        Route::post('/edit/{id}', 'App\Http\Controllers\API\BookController@edit')->name('EditBooks');
-        Route::get('/delete/{id}', 'App\Http\Controllers\API\BookController@destroy')->name('DeleteBooks');
+        Route::get('/', 'App\Http\Controllers\API\BookController@index')->name('ShowAllBooks')->middleware('auth:api');
+        Route::post('/add', 'App\Http\Controllers\API\BookController@store')->name('AddNewBooks')->middleware('auth:api');
+        Route::get('/show/{id}', 'App\Http\Controllers\API\BookController@show')->name('ShowBooksByID')->middleware('auth:api');
+        Route::post('/edit/{id}', 'App\Http\Controllers\API\BookController@edit')->name('EditBooks')->middleware('auth:api');
+        Route::get('/delete/{id}', 'App\Http\Controllers\API\BookController@destroy')->name('DeleteBooks')->middleware('auth:api');
+        Route::post('/rating/{id}', 'App\Http\Controllers\API\BookController@store_rating')->name('RatingBooks')->middleware('auth:api');
+        Route::post('/review/{id}', 'App\Http\Controllers\API\BookController@store_review')->name('ReviewBooks')->middleware('auth:api');
     });
 });

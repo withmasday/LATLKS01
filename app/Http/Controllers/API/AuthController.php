@@ -54,7 +54,7 @@ class AuthController extends BaseController
     }
 
     public function signout(Request $request) {
-        if ($request->user()) { 
+        if ($request->user()) {
             $request->user()->tokens()->delete();
             return $this->sendResponse('LogOut Successfully', null);
         }
